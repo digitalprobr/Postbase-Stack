@@ -41,6 +41,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { emailSettings, emailTemplates } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
+import { emailDisplayName } from "@/lib/email/display-name";
 import { validateApiKey } from "@/lib/auth/keys";
 import { getProjectPool, getProjectSchema, ensureProjectAuthTables } from "@/lib/project-db";
 import { createTransport } from "nodemailer";
@@ -89,7 +90,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pro
 
     // Upsert user
     const { rows: [existing] } = await client.query(
-      `SELECT id FROM "${schema}"."users" WHERE "email" = $1 LIMIT 1`,
+      `SELECT id, "name" FROM "${schema}"."users" WHERE "email" = $1 LIMIT 1`,
       [email]
     );
     if (!existing) {
@@ -140,6 +141,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pro
       ? template.body
           .replace(/\{\{code\}\}/g, code)
           .replace(/\{\{email\}\}/g, email)
+          .replace(/\{\{name\}\}/g, () => emailDisplayName(existing?.name))
           .replace(/\{\{expires_in\}\}/g, "10 minutes")
       : `<p>Your verification code is: <strong>${code}</strong></p><p>This code expires in 10 minutes.</p>`;
 

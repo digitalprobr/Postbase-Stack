@@ -51,6 +51,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { emailSettings, emailTemplates, providerConfigs } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
+import { emailDisplayName } from "@/lib/email/display-name";
 import { validateApiKey } from "@/lib/auth/keys";
 import { getProjectPool, getProjectSchema, ensureProjectAuthTables } from "@/lib/project-db";
 import { nanoid } from "nanoid";
@@ -126,7 +127,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pro
 
     // Upsert user — create if not exists
     const { rows: [existing] } = await client.query(
-      `SELECT id FROM "${schema}"."users" WHERE "email" = $1 LIMIT 1`,
+      `SELECT id, "name" FROM "${schema}"."users" WHERE "email" = $1 LIMIT 1`,
       [email]
     );
     if (!existing) {
@@ -183,11 +184,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pro
 
     if (isOtp) {
       htmlBody = htmlBody
-        ? htmlBody.replace(/\{\{code\}\}/g, token).replace(/\{\{email\}\}/g, email).replace(/\{\{expires_in\}\}/g, "10 minutes").replace(/\{\{name\}\}/g, "")
+        ? htmlBody.replace(/\{\{code\}\}/g, token).replace(/\{\{email\}\}/g, email).replace(/\{\{expires_in\}\}/g, "10 minutes").replace(/\{\{name\}\}/g, () => emailDisplayName(existing?.name))
         : `<p>Your verification code is: <strong>${token}</strong></p><p>This code expires in 10 minutes.</p>`;
     } else {
       htmlBody = htmlBody
-        ? htmlBody.replace(/\{\{magic_link\}\}/g, magicLink).replace(/\{\{email\}\}/g, email).replace(/\{\{name\}\}/g, "")
+        ? htmlBody.replace(/\{\{magic_link\}\}/g, magicLink).replace(/\{\{email\}\}/g, email).replace(/\{\{name\}\}/g, () => emailDisplayName(existing?.name))
         : `<p>Click <a href="${magicLink}">here</a> to sign in.</p>`;
     }
 
