@@ -28,7 +28,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**Railway** — tested, recommended. Two services (app + managed Postgres), one required secret. See [RAILWAY.md](RAILWAY.md).
+**Railway** — tested, recommended. Two services (app + managed Postgres), one required secret. See [RAILWAY.md](docs/RAILWAY.md).
 
 </td>
 </tr>
@@ -41,7 +41,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**DigitalOcean** — tested, recommended. App Platform + managed database, provisioned from the app spec. See [DIGITALOCEAN.md](DIGITALOCEAN.md).
+**DigitalOcean** — tested, recommended. App Platform + managed database, provisioned from the app spec. See [DIGITALOCEAN.md](docs/DIGITALOCEAN.md).
 
 </td>
 </tr>
@@ -54,7 +54,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**Render** — unverified. Blueprint (`render.yaml`) defines the web service + Postgres together. See [RENDER.md](RENDER.md).
+**Render** — unverified. Blueprint (`render.yaml`) defines the web service + Postgres together. See [RENDER.md](docs/RENDER.md).
 
 </td>
 </tr>
@@ -67,7 +67,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**Fly.io** — unverified. Button only runs `fly launch`; run `fly/setup.sh` after for Postgres + secrets. See [FLY.md](FLY.md).
+**Fly.io** — unverified. Button only runs `fly launch`; run `fly/setup.sh` after for Postgres + secrets. See [FLY.md](docs/FLY.md).
 
 </td>
 </tr>
@@ -80,7 +80,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**AWS** — unverified. CloudFormation: CodeBuild builds the image, deploys to App Runner + RDS Postgres. See [AWS.md](AWS.md).
+**AWS** — unverified. CloudFormation: CodeBuild builds the image, deploys to App Runner + RDS Postgres. See [AWS.md](docs/AWS.md).
 
 </td>
 </tr>
@@ -93,7 +93,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**Google Cloud** — unverified. Opens Cloud Shell; `gcp/setup.sh` provisions Cloud SQL and deploys to Cloud Run. See [GCP.md](GCP.md).
+**Google Cloud** — unverified. Opens Cloud Shell; `gcp/setup.sh` provisions Cloud SQL and deploys to Cloud Run. See [GCP.md](docs/GCP.md).
 
 </td>
 </tr>
@@ -106,7 +106,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**Azure** — unverified. ARM/Bicep: ACR Task builds the image, deploys to Container Apps + Postgres Flexible Server. See [AZURE.md](AZURE.md).
+**Azure** — unverified. ARM/Bicep: ACR Task builds the image, deploys to Container Apps + Postgres Flexible Server. See [AZURE.md](docs/AZURE.md).
 
 </td>
 </tr>
@@ -119,7 +119,7 @@ Think: self-hosted Supabase / Clerk — you own the data, you control the infra.
 </td>
 <td>
 
-**Oracle Cloud** — unverified, extra setup required (GitHub token, manual `NEXTAUTH_URL` step). Container Instances + OCI Database with PostgreSQL. See [ORACLE.md](ORACLE.md).
+**Oracle Cloud** — unverified, extra setup required (GitHub token, manual `NEXTAUTH_URL` step). Container Instances + OCI Database with PostgreSQL. See [ORACLE.md](docs/ORACLE.md).
 
 </td>
 </tr>
