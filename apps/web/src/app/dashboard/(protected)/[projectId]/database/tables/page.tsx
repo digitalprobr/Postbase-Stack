@@ -652,6 +652,28 @@ export default function DatabasePage({
     if (tab === "sql") fetchHistory();
   }, [tab, fetchRls, fetchTables, fetchHistory]);
 
+  // Carry the Tables-tab selection into RLS, but only once the RLS table list is loaded:
+  // seeding it earlier leaves selectedRlsTable pointing at a name that is not in rlsTables yet.
+  useEffect(() => {
+    if (tab !== "rls" || !selectedTable) return;
+    if (rlsTables.some((t) => t.tablename === selectedTable)) setSelectedRlsTable(selectedTable);
+  }, [tab, rlsTables, selectedTable]);
+
+  // A selection that no longer exists (table dropped/renamed) is cleared instead of rendered.
+  useEffect(() => {
+    if (!selectedRlsTable) return;
+    if (rlsTables.length > 0 && !rlsTables.some((t) => t.tablename === selectedRlsTable)) {
+      setSelectedRlsTable(null);
+    }
+  }, [rlsTables, selectedRlsTable]);
+
+  // Nothing RLS-related may survive a project switch.
+  useEffect(() => {
+    setPolicies([]);
+    setRlsTables([]);
+    setSelectedRlsTable(null);
+  }, [projectId]);
+
   useEffect(() => {
     if (!importDropdownOpen) return;
     function handleClick(e: MouseEvent) {
@@ -1467,7 +1489,7 @@ export default function DatabasePage({
           ).map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={() => { setTab(id); if (id === "rls" && selectedTable) setSelectedRlsTable(selectedTable); }}
+              onClick={() => setTab(id)}
               className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 tab === id
                   ? "bg-zinc-800 text-white"
@@ -2398,8 +2420,19 @@ export default function DatabasePage({
                 <div className="h-full flex items-center justify-center text-zinc-600 text-sm">
                   Select a table to view its policies
                 </div>
+              ) : rlsLoading && rlsTables.length === 0 ? (
+                <div className="h-full flex items-center justify-center text-zinc-600 text-sm">
+                  Loading…
+                </div>
               ) : (() => {
-                const t = rlsTables.find((x) => x.tablename === selectedRlsTable)!;
+                const t = rlsTables.find((x) => x.tablename === selectedRlsTable);
+                if (!t) {
+                  return (
+                    <div className="h-full flex items-center justify-center text-zinc-600 text-sm">
+                      Select a table to view its policies
+                    </div>
+                  );
+                }
                 const tablePolicies = policies.filter((p) => p.tablename === selectedRlsTable);
                 return (
                   <div className="flex flex-col h-full">
